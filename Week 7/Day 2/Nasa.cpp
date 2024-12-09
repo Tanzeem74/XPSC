@@ -3,28 +3,46 @@
 #define endl '\n'
 #define ll long long int
 using namespace std;
-void solution(){
-    ll n; cin >> n;
-    ll mxBit=__lg(n);
-    vector<ll>ans;
-    for(ll i=0;i<=mxBit;i++){
-        if((n >> i) & 1){
-            ll val=n-(1ll << i);
-            if(val>0)
-                ans.push_back(val);
-        }
-    }
-    sort(ans.begin(),ans.end());
-    ans.push_back(n);
-    cout << ans.size() << endl;
-    for(auto v : ans)
-        cout << v << " ";
-    cout << endl;
+const int maxN = (1LL << 15);
+vector<int> allPalindrome;
+bool isPalindrome(int x) {
+   string s = to_string(x);
+   int len = s.size();
+   for (int i = 0;i < len / 2;i++) {
+      if (s[i] != s[len - i - 1]) {
+         return false;
+      }
+   }
+   return true;
 }
-int main()
-{
+void markPalindrome() {
+   for (int i = 0;i < maxN;i++) {
+      if (isPalindrome(i)) {
+         allPalindrome.push_back(i);
+      }
+   }
+}
+
+int main() {
     faster
-    int t = 1; cin >> t;
-    while (t--)
-        solution();
+    markPalindrome();
+    int t; cin >> t;
+   while (t--) {
+      int n; cin >> n;
+      vector<int> a(n), cnt(maxN + 1);
+      for (int i = 0;i < n;i++) {
+         cin >> a[i];
+         cnt[a[i]]++;
+      }
+
+      ll ans = n;
+      for (int i = 0;i < n;i++) {
+         for (int j = 0;j < allPalindrome.size();j++) {
+            int curr = (a[i] ^ allPalindrome[j]);
+            ans += cnt[curr];
+         }
+      }
+
+      cout << (ans / 2) << endl;
+   }
 }
